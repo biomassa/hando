@@ -14,6 +14,54 @@
         "boxes": [
             {
                 "box": {
+                    "comment": "Z float 0..1 for vst~ parameters, far to near, 30 per second",
+                    "id": "obj-63",
+                    "index": 0,
+                    "maxclass": "outlet",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 920.0, 1060.0, 30.0, 30.0 ],
+                    "varname": "hando_out_zf"
+                }
+            },
+            {
+                "box": {
+                    "comment": "Y float 0..1 for vst~ parameters, bottom to top, 30 per second",
+                    "id": "obj-61",
+                    "index": 0,
+                    "maxclass": "outlet",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 820.0, 1060.0, 30.0, 30.0 ],
+                    "varname": "hando_out_yf"
+                }
+            },
+            {
+                "box": {
+                    "comment": "X float 0..1 for vst~ parameters, left to right, 30 per second",
+                    "id": "obj-57",
+                    "index": 0,
+                    "maxclass": "outlet",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 720.0, 1060.0, 30.0, 30.0 ],
+                    "varname": "hando_out_xf"
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-53",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 3,
+                    "outlettype": [ "float", "float", "float" ],
+                    "patching_rect": [ 720.0, 860.0, 222.0, 22.0 ],
+                    "text": "unpack 0. 0. 0.",
+                    "varname": "hando_cvfloat"
+                }
+            },
+            {
+                "box": {
                     "id": "obj-49",
                     "linecount": 2,
                     "maxclass": "comment",
@@ -86,17 +134,6 @@
             },
             {
                 "box": {
-                    "id": "obj-31",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 20.0, 1104.0, 620.0, 20.0 ],
-                    "text": "outlets, 0..1 signals: X, Y, Z, gate (1 while pointing)",
-                    "varname": "cmt_outs"
-                }
-            },
-            {
-                "box": {
                     "id": "obj-24",
                     "maxclass": "comment",
                     "numinlets": 1,
@@ -148,7 +185,7 @@
                     "outlettype": [ "", "", "", "" ],
                     "patching_rect": [ 720.0, 480.0, 118.0, 22.0 ],
                     "restore": {
-                        "hando_on": [ 0 ],
+                        "hando_on": [ 1 ],
                         "hando_slewms": [ 0 ]
                     },
                     "text": "autopattr @greedy 1",
@@ -188,7 +225,7 @@
                     "numoutlets": 3,
                     "outlettype": [ "", "", "" ],
                     "patching_rect": [ 1670.0, 100.0, 110.0, 22.0 ],
-                    "restore": [ -1.6696956474075126, -2.1670300168995333 ],
+                    "restore": [ -1.577600962943366, -1.8680564241846376 ],
                     "saved_object_attributes": {
                         "parameter_enable": 0,
                         "parameter_mappable": 0
@@ -220,7 +257,7 @@
             },
             {
                 "box": {
-                    "comment": "gate signal: 1 while pointing (X, Y, Z live), 0 when frozen",
+                    "comment": "gate signal: 1 while pointing, 0 when frozen",
                     "id": "obj-64",
                     "index": 0,
                     "maxclass": "outlet",
@@ -232,7 +269,7 @@
             },
             {
                 "box": {
-                    "comment": "Z 0..1 signal (far to near)",
+                    "comment": "Z signal 0..1, far to near",
                     "id": "obj-60",
                     "index": 0,
                     "maxclass": "outlet",
@@ -244,7 +281,7 @@
             },
             {
                 "box": {
-                    "comment": "Y 0..1 signal (bottom to top)",
+                    "comment": "Y signal 0..1, bottom to top",
                     "id": "obj-58",
                     "index": 0,
                     "maxclass": "outlet",
@@ -256,7 +293,7 @@
             },
             {
                 "box": {
-                    "comment": "X 0..1 signal (left to right)",
+                    "comment": "X signal 0..1, left to right",
                     "id": "obj-56",
                     "index": 0,
                     "maxclass": "outlet",
@@ -356,7 +393,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 720.0, 860.0, 80.0, 22.0 ],
+                    "patching_rect": [ 1060.0, 860.0, 80.0, 22.0 ],
                     "text": "print hando",
                     "varname": "hando_print"
                 }
@@ -690,6 +727,21 @@
                     "text": "route start ready",
                     "varname": "hando_rready"
                 }
+            },
+            {
+                "box": {
+                    "fontface": 0,
+                    "fontname": "Arial",
+                    "fontsize": 12.0,
+                    "id": "obj-67",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 20.0, 1104.0, 940.0, 20.0 ],
+                    "text": "outlets, all 0..1. 1-4 signals: X, Y, Z, gate (1 while pointing). 5-7 floats for vst~ parameters: X, Y, Z",
+                    "textcolor": [ 0.8, 0.8, 0.8, 1.0 ],
+                    "varname": "cmt_outs"
+                }
             }
         ],
         "lines": [
@@ -779,6 +831,24 @@
             },
             {
                 "patchline": {
+                    "destination": [ "obj-57", 0 ],
+                    "source": [ "obj-53", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-61", 0 ],
+                    "source": [ "obj-53", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-63", 0 ],
+                    "source": [ "obj-53", 2 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "obj-64", 0 ],
                     "source": [ "obj-54", 0 ]
                 }
@@ -824,6 +894,13 @@
             },
             {
                 "patchline": {
+                    "destination": [ "obj-53", 0 ],
+                    "order": 0,
+                    "source": [ "obj-80", 2 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "obj-54", 0 ],
                     "source": [ "obj-80", 3 ]
                 }
@@ -843,6 +920,7 @@
             {
                 "patchline": {
                     "destination": [ "obj-81", 0 ],
+                    "order": 1,
                     "source": [ "obj-80", 2 ]
                 }
             },

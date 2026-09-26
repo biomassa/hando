@@ -58,16 +58,21 @@ The patch keeps the calibration when you save it.
 
 ## Outlets
 
-All outlets send signals. The range of the values is 0 to 1.
+The range of all values is 0 to 1.
 
-| Outlet | Value | 0 | 1 |
-|---|---|---|---|
-| 1 | X | left | right |
-| 2 | Y | bottom | top |
-| 3 | Z | far | near |
-| 4 | Gate | not pointing | pointing |
+| Outlet | Value | Type | 0 | 1 |
+|---|---|---|---|---|
+| 1 | X | signal | left | right |
+| 2 | Y | signal | bottom | top |
+| 3 | Z | signal | far | near |
+| 4 | Gate | signal | not pointing | pointing |
+| 5 | X | float | left | right |
+| 6 | Y | float | bottom | top |
+| 7 | Z | float | far | near |
 
-X, Y and Z move from one frame to the next in 33 ms (one camera frame). This removes steps in the signals.
+On the signal outlets, X, Y and Z move from one frame to the next in 33 ms (one camera frame). This removes steps in the signals.
+
+The float outlets send one value for each camera frame, 30 times per second. Use them for `vst~` parameters. `vst~` parameters also use the range 0 to 1. For example, connect outlet 5 to `prepend 3`, and connect `prepend 3` to `vst~`. This sets parameter 3.
 
 ## Messages
 
