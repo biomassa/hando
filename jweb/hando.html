@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- No network: local files only (file:, and blob:/data: that the wasm loader may use).
+     This also stops MediaPipe's usage metrics to odml.pa.googleapis.com. -->
+<meta http-equiv="Content-Security-Policy" content="connect-src file: blob: data:">
+<title>hando</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #111; overflow: hidden; }
+  video { display: none; }
+  canvas { width: 100%; height: 100%; object-fit: contain; display: block; }
+</style>
+</head>
+<body>
+<video id="video" autoplay playsinline muted></video>
+<canvas id="view"></canvas>
+<!-- tasks-vision ships as CommonJS; the shim lets a classic script load it (works on file://) -->
+<script>var exports = {}; var module = { exports: exports };</script>
+<script src="vendor/tasks-vision@1.0.1/vision_bundle.cjs"></script>
+<script src="hando.js"></script>
+</body>
+</html>
