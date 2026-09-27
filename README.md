@@ -86,6 +86,8 @@ Send these messages to the `jweb` object to change the settings.
 | `zfilter <cutoff> <beta>` | Smoothing of Z | 0.8 3 |
 | `straight <value>` | Limit for a straight finger, from -1 to 1. A higher value needs a straighter finger. | 0.6 |
 | `debounce <frames>` | Number of frames that a new hand shape must stay before the patch uses it | 2 |
+| `box <size>` | Size of the X and Y area, from 0.2 to 1 of the camera image. The area stays in the center. | 0.6 |
+| `confidence <detection> <presence> <tracking>` | Limits for the hand detection, from 0 to 1. Increase `detection` and `presence` if the patch finds a hand that is not there. Decrease `tracking` if the patch loses the hand in fast movements. | 0.7 0.5 0.3 |
 | `margin <value>` | Makes the X and Y area smaller on each side, from 0 to 0.3. This makes the edges easy to reach. | 0.05 |
 | `res <width> <height> [fps]` | Camera image size and frame rate | 1280 960 30 |
 | `camera <name>` | Camera to use. Part of the name is sufficient. | MacBook |

@@ -31,6 +31,9 @@
 //   calibrate near|far      point and hold still at that distance for 1 s
 //   calib <near> <far>      set the Z calibration (from pattr; an older stored list of six numbers,
 //                           x0 x1 y0 y1 near far, is also taken, using only its last two)
+//   box <0.2..1>            size of the X/Y box, centred, as a fraction of the frame (default 0.6)
+//   confidence <detection> <presence> <tracking>   MediaPipe's limits, 0..1 (defaults 0.7 0.5 0.3):
+//                           raise detection / presence against phantom hands, lower tracking for fast moves
 //   margin <0..0.3>         shrink the X/Y box by this fraction on each side (default 0.05),
 //                           so the edges are easy to reach
 //   filter <minCutoffHz> <beta>   One Euro filter: lower minCutoff = steadier when still,
@@ -111,7 +114,14 @@ const fx = new OneEuro(filt), fy = new OneEuro(filt), fz = new OneEuro(zfilt);
 // ---------- mapping and Z calibration ----------
 
 // X/Y box in frame 0..1 (mirrored, y down), fixed; near / far as log palm size, calibrated
-const cal = { x0: 0.15, x1: 0.85, y0: 0.15, y1: 0.85, near: Math.log(0.18), far: Math.log(0.09) };
+const cal = { x0: 0.2, x1: 0.8, y0: 0.2, y1: 0.8, near: Math.log(0.18), far: Math.log(0.09) };
+
+// X/Y box: centred, this fraction of the frame on each axis
+function setBox(size) {
+  size = Math.min(1, Math.max(0.2, +size || 0.6));
+  cal.x0 = cal.y0 = (1 - size) / 2;
+  cal.x1 = cal.y1 = 1 - cal.x0;
+}
 // near: palm size (mean segment / frame height) at 10 V, the closest the whole hand still fits in
 // the frame at the MacBook camera's default zoom; far: about twice as far away
 let margin = 0.05;
@@ -171,13 +181,14 @@ async function createLandmarker(wasmPath, modelPath) {
     baseOptions: { modelAssetPath: modelPath, delegate: "GPU" },
     runningMode: "VIDEO",
     numHands: 1,
-    minHandDetectionConfidence: 0.5,
-    // lower than the 0.5 defaults, so a blurred hand in a fast move stays tracked
-    // instead of dropping out and waiting for the palm detector to find it again
-    minHandPresenceConfidence: 0.3,
-    minTrackingConfidence: 0.3,
+    ...confidence,
   });
 }
+
+// MediaPipe's confidence limits, 0..1. detection: to accept a new hand; presence: to keep a tracked
+// hand; tracking: to follow it without running the palm detector again. Higher detection and presence
+// = fewer phantom hands; lower tracking = a blurred hand in a fast move stays tracked.
+const confidence = { minHandDetectionConfidence: 0.7, minHandPresenceConfidence: 0.5, minTrackingConfidence: 0.3 };
 
 // Everything loads from this folder. hando.html's Content-Security-Policy blocks all network
 // requests, so there is no online fallback, and MediaPipe's usage metrics can't be sent.
@@ -501,6 +512,14 @@ bind("calib", (...v) => {
   Object.assign(cal, { near, far });
 });
 bind("margin", (v) => { margin = Math.min(0.3, Math.max(0, +v || 0)); });
+bind("box", (v) => { setBox(v); });
+bind("confidence", (d, p, t) => {
+  const c = (v, old) => (typeof v === "number" ? Math.min(1, Math.max(0, v)) : old);
+  confidence.minHandDetectionConfidence = c(d, confidence.minHandDetectionConfidence);
+  confidence.minHandPresenceConfidence = c(p, confidence.minHandPresenceConfidence);
+  confidence.minTrackingConfidence = c(t, confidence.minTrackingConfidence);
+  if (landmarker) landmarker.setOptions({ ...confidence });
+});
 bind("filter", (mc, beta) => { filt.minCutoff = Math.max(0.01, +mc); filt.beta = Math.max(0, +beta); });
 bind("zfilter", (mc, beta) => { zfilt.minCutoff = Math.max(0.01, +mc); zfilt.beta = Math.max(0, +beta); });
 bind("straight", (v) => { straightAt = Math.max(-1, Math.min(1, +v)); });
